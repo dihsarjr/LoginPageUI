@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
+import 'package:loginpage/login_done.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations(
@@ -101,17 +105,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.only(
                             left: 30, right: 30, top: 5, bottom: 5),
                         child: FlatButton(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          onPressed: () {
-                            print('login');
-                          },
-                        ),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            onPressed: () {
+                              _validation(emailController.text,
+                                  passwordController.text);
+                            }),
                       ),
                     ),
                   ),
@@ -122,5 +126,28 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  _validation(String emails, String passwords) async {
+    Map<String, String> headers = {};
+    Response response = await post('http://multi.capcee.com/api/login',
+        headers: headers, body: {'email': emails, 'password': passwords});
+    print('Response status: ${response.statusCode}');
+    print(response.body);
+    Map<String, dynamic> responseJson = jsonDecode(response.body);
+    String respons = responseJson['response'].toString();
+
+    if (respons == 'true') {
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) =>
+          Login()
+    )
+      );
+    } else {
+      print('false');
+    }
   }
 }
