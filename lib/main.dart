@@ -135,19 +135,14 @@ class _MyHomePageState extends State<MyHomePage> {
     print('Response status: ${response.statusCode}');
     print(response.body);
     Map<String, dynamic> responseJson = jsonDecode(response.body);
-    String respons = responseJson['response'].toString();
+    String respons = responseJson['message'].toString();
 
     if (respons == 'true') {
-
       Navigator.push(
-          context,
-          MaterialPageRoute(
-          builder: (context) =>
-          Login()
-    )
-      );
+          context, MaterialPageRoute(builder: (context) => Login(respons)));
     } else {
-      print('false');
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Login(respons)));
     }
   }
 }
